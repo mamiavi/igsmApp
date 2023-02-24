@@ -1,0 +1,7 @@
+{
+  "name": "igsmVLCApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
