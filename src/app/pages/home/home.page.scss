@@ -1,0 +1,22 @@
+#container {
+    text-align: center;
+  
+    position: absolute;
+    left: 0;
+    right: 0;
+  
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .logo {
+    width: 30vh;
+  }
+  
+  .input {
+    padding-left: 6vh;
+    padding-right: 6vh;
+    padding-top: 10vh;
+    padding-bottom: 5vh;
+  }
+  
