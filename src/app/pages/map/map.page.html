@@ -4,16 +4,44 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content id="ol-map" class="ol-map">
+<ion-content id="ol-map">
+
+  <ion-fab vertical="top" horizontal="start" slot="fixed">
+    <ion-fab-button id="open-info-modal" color="light" class="square">
+      <ion-icon name="information-circle-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button color="secondary">
       <ion-icon (click)="centerView()" name="locate-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
 </ion-content>
 
 <ion-footer>
   <ion-toolbar color="tertiary">
-
   </ion-toolbar>
 </ion-footer>
+
+<ion-modal trigger="open-info-modal">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Information</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="close()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <p>
+        Instructions to follow in order to use the application:
+        Bla, bla, bla, Bla, bla, bla, Bla, bla, bla, Bla, bla, bla, Bla, bla, bla,
+        Bla, bla, bla, Bla, bla, bla, Bla, bla, bla, Bla, bla, bla, Bla, bla, bla,
+        Bla, bla, bla, Bla, bla, bla, Bla, bla, bla, Bla, bla, bla, Bla, bla, bla,
+      </p>
+    </ion-content>
+  </ng-template>
+</ion-modal>

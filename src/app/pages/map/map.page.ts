@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonModal, AlertController, ModalController, AnimationController } from '@ionic/angular';
 
 import { Motion } from '@capacitor/motion';
 
@@ -9,12 +10,16 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import OSM from 'ol/source/OSM';
 
 import { transform } from 'ol/proj';
+import { getDistance } from 'ol/sphere';
 
 import Geolocation from 'ol/Geolocation';
 import Point from 'ol/geom/Point';
 
 import Feature from 'ol/Feature';
 import {Icon, Style} from 'ol/style';
+
+import { Attribution } from 'ol/control';
+import { QuizComponent } from 'src/app/components/quiz/quiz.component';
 
 @Component({
   selector: 'app-map',
@@ -23,10 +28,13 @@ import {Icon, Style} from 'ol/style';
 })
 export class MapPage implements OnInit {
 
+  @ViewChild(IonModal) modal: IonModal;
+
   map: Map;
   positionUser: Feature;
+  nextStop: Feature;
 
-  constructor() { }
+  constructor(private alertController: AlertController, private modalCtrl: ModalController, private animationCtrl: AnimationController) { }
 
   ngOnInit() {
 
@@ -42,11 +50,11 @@ export class MapPage implements OnInit {
         }),
       ],
       target: 'ol-map',
-      controls:[]
+      controls:[new Attribution()]
     });
 
+    
     // Configure the user position
-    this.positionUser = new Feature();
 
     const iconUser = new Icon({
       src: './assets/imgs/geolocation_marker_heading.png',
@@ -56,6 +64,12 @@ export class MapPage implements OnInit {
     const stylePositionUser = new Style({
         image: iconUser
     });
+
+    this.positionUser = new Feature();
+
+    stylePositionUser.setImage(iconUser);
+    this.positionUser.setStyle(stylePositionUser);
+
 
     // Start geolocation
     const geolocation = new Geolocation({
@@ -67,9 +81,38 @@ export class MapPage implements OnInit {
 
     geolocation.setTracking(true);
 
+    let mierda = true;
+
     geolocation.on('change:position', () => {
       const coordinates = geolocation.getPosition();
       this.positionUser.setGeometry(coordinates ? new Point(coordinates) : undefined);
+
+      // check distance
+      if(this.checkDistance(this.positionUser, this.nextStop) || mierda) {
+        
+        // Prevent multiple alerts
+        mierda = false;
+
+        //Open an alert to start the quiz
+        this.alertController.create({
+          header:'Alert',
+          subHeader:'Just arrived to {Monumento}',
+          message:'Do you want to know more about it?',
+          buttons: [{
+            text:'OK',
+            role:'confirm',
+            handler: () => {
+              // change to next stop
+              
+              // open the modal with the audio
+              this.showQuizModal();
+
+            }
+          }],
+        }).then((alert) => alert.present());
+
+      }
+
     });
 
     Motion.addListener('orientation', event => {
@@ -105,4 +148,68 @@ export class MapPage implements OnInit {
 
   }
 
+  public checkDistance(userPosition: Feature, nextStop: Feature) {
+
+    const tolerance = 30 //meters
+
+    let userGeom = <Point>userPosition.getGeometry()?.clone().transform('EPSG:3857','EPSG:4326');
+    let stopGeom = <Point>nextStop?.getGeometry()?.clone().transform('EPSG:3857','EPSG:4326');
+
+    //let distance = getDistance(userGeom.getCoordinates(), stopGeom.getCoordinates());
+
+    let distance = 1000;
+
+    if(distance <= tolerance){
+
+      return true;
+
+    } else {
+
+      return false;
+    
+    }
+
+  }
+
+  public close() {
+    this.modal.dismiss();
+  }
+
+  public showQuizModal() {
+
+    this.modalCtrl.create({
+      component: QuizComponent,
+      enterAnimation: this.enterAnimation,
+      leaveAnimation: this.leaveAnimation,
+    }).then(modal => modal.present());
+    
+  }
+
+  enterAnimation = (baseEl: HTMLElement) => {
+    const root = baseEl.shadowRoot;
+
+    const backdropAnimation = this.animationCtrl
+      .create()
+      .addElement(root?.querySelector('ion-backdrop')!)
+      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+
+    const wrapperAnimation = this.animationCtrl
+      .create()
+      .addElement(root?.querySelector('.modal-wrapper')!)
+      .keyframes([
+        { offset: 0, opacity: '0', transform: 'scale(0)' },
+        { offset: 1, opacity: '0.99', transform: 'scale(1)' },
+      ]);
+
+    return this.animationCtrl
+      .create()
+      .addElement(baseEl)
+      .easing('ease-out')
+      .duration(500)
+      .addAnimation([backdropAnimation, wrapperAnimation]);
+  };
+
+  leaveAnimation = (baseEl: HTMLElement) => {
+    return this.enterAnimation(baseEl).direction('reverse');
+  };
 }
