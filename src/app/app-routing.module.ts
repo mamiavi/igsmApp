@@ -12,10 +12,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
   {
-    path: 'navigation',
-    loadChildren: () => import('./pages/navigation/navigation.module').then( m => m.NavigationPageModule)
-  },
-  {
     path: 'map',
     loadChildren: () => import('./pages/map/map.module').then( m => m.MapPageModule)
   }

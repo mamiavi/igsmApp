@@ -1,15 +1,19 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>map</ion-title>
+  <ion-toolbar color="tertiary">
+    <ion-title>IGSM VLC City Rally</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div id="ol-map" class="ol-map"></div>
+<ion-content id="ol-map" class="ol-map">
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button color="secondary">
+      <ion-icon (click)="centerView()" name="locate-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar>
-    
+  <ion-toolbar color="tertiary">
+
   </ion-toolbar>
 </ion-footer>
