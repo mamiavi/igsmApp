@@ -3,10 +3,10 @@
     <img src="assets/imgs/icon.png" class="logo" alt="IGSM 2023 Logotype">
     
     <ion-item class="input" fill="outline">
-      <ion-input placeholder="Enter the group's password" autocapitalize="characteres" inputmode=""></ion-input>
+      <ion-input [(ngModel)]="code" placeholder="Enter the group's password" autocapitalize="characteres" inputmode=""></ion-input>
     </ion-item>
 
-    <ion-button (click)="check()">Enter</ion-button>
+    <ion-button (click)="logIn()">Enter</ion-button>
 
   </div>
 </ion-content>
