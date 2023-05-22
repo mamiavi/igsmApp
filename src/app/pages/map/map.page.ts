@@ -92,6 +92,7 @@ export class MapPage implements OnInit {
         
         // Prevent multiple alerts
         mierda = false;
+        //Instead of doing this, just stop the geolocation tracking and start it again once the user leaves the stop and the next stop is set as actual stop
 
         //Open an alert to start the quiz
         this.alertController.create({
