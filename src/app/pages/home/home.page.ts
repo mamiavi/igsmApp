@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
 import { ToastController } from '@ionic/angular';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-home',
@@ -12,30 +13,32 @@ export class HomePage implements OnInit {
 
   codes: string[] = [];
   code:string;
+  route:number[];
 
-  constructor(private router:Router, private api:ApiService, private toastController: ToastController) { }
+  constructor(private router:Router, private api:ApiService, private toastController: ToastController, private dataService: DataService) { }
 
   ngOnInit() {
 
     this.api.getGroups().then(response => {
       
-      response.data.groups.forEach((group: {id:number, code: string, points:number }) => {
+      response.data.groups.forEach((group: {id:number, code: string, points:number, devices:number, route:string }) => {
         
         this.codes.push(group.code);
+        this.route = group.route.split(';').map(Number);
       
       });
 
-    });
+    }).catch(err => console.log(err));
 
   }
 
   public logIn() {
 
-    //Check the password given
-
-
     if(this.codes.includes(this.code)) {
       
+      this.dataService.code = this.code;
+      this.dataService.route = this.route;
+
       this.router.navigate(['map']);
     
     } else {

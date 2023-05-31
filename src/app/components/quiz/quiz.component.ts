@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonRange, ModalController } from '@ionic/angular';
 import { Howl } from 'howler';
+import { ApiService } from 'src/app/services/api.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-quiz',
@@ -16,7 +18,7 @@ export class QuizComponent implements OnInit {
 
   @ViewChild('range', {static: false}) range: IonRange;
 
-  constructor(private modalCtrl: ModalController) { }
+  constructor(private modalCtrl: ModalController, private api: ApiService, private data: DataService) { }
 
   ngOnInit() {
 
@@ -68,6 +70,7 @@ export class QuizComponent implements OnInit {
     if(correct){
 
       console.log('note a correct answer for the team');
+      this.api.addPoint(this.data.code);
 
     } else {
 
