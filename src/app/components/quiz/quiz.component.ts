@@ -22,16 +22,20 @@ export class QuizComponent implements OnInit {
 
   name:string;
   question:string;
+  image:string;
+  audio:string;
   answers:[];
 
   ngOnInit() {
 
     this.name = this.data.geojson[this.data.route[this.data.count]]["name"];
     this.question = this.data.geojson[this.data.route[this.data.count]]["question"];
+    this.image = this.data.geojson[this.data.route[this.data.count]]["image"];
+    this.audio = this.data.geojson[this.data.route[this.data.count]]["audio"];
     this.answers = this.data.geojson[this.data.route[this.data.count]]["answers"];
 
     this.player = new Howl({
-      src: `./assets/audio/${this.data.geojson[this.data.route[this.data.count]]["audio"]}`,
+      src: `./assets/audio/${this.audio}`,
       onplay: () => {
         this.isPlaying = true;
         this.updateProgress();

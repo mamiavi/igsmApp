@@ -6,7 +6,7 @@
 
 <ion-content class="ion-padding">
   
-  <ion-img src="https://docs-demo.ionic.io/assets/madison.jpg" alt="The Wisconsin State Capitol building in Madison, WI at night"></ion-img>
+  <ion-img style="height: 80%; padding-bottom: 1%;" src="./assets/imgs/{{this.image}}"></ion-img>
 
   <ion-row>
 
@@ -22,19 +22,18 @@
 
   </ion-row>
 
-  <div *ngIf="audioEnd">
 
-    <ion-list>
+    <ion-list *ngIf="audioEnd">
 
       <ion-list-header>
-        <ion-label>{{question}}</ion-label>
+        <ion-label> <h2><strong>{{question}}</strong></h2> </ion-label>
       </ion-list-header>
 
       <ion-item *ngFor="let option of answers" button color="light" (click)="checkAnswer(getValue(option))">
         <ion-label>{{getKey(option)}}</ion-label>
       </ion-item>
+      
     </ion-list>
 
-  </div>
 
 </ion-content>
