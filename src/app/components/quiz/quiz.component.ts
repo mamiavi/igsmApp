@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonRange, ModalController } from '@ionic/angular';
 import { Howl } from 'howler';
+import { ApiService } from 'src/app/services/api.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-quiz',
@@ -16,12 +18,20 @@ export class QuizComponent implements OnInit {
 
   @ViewChild('range', {static: false}) range: IonRange;
 
-  constructor(private modalCtrl: ModalController) { }
+  constructor(private modalCtrl: ModalController, private api: ApiService, private data: DataService) { }
+
+  name:string;
+  question:string;
+  answers:[];
 
   ngOnInit() {
 
+    this.name = this.data.geojson[this.data.route[this.data.count]]["name"];
+    this.question = this.data.geojson[this.data.route[this.data.count]]["question"];
+    this.answers = this.data.geojson[this.data.route[this.data.count]]["answers"];
+
     this.player = new Howl({
-      src: './assets/audio/clearday.mp3',
+      src: `./assets/audio/${this.data.geojson[this.data.route[this.data.count]]["audio"]}`,
       onplay: () => {
         this.isPlaying = true;
         this.updateProgress();
@@ -31,7 +41,7 @@ export class QuizComponent implements OnInit {
       }
     });
 
-   }
+  }
 
   togglePlayer(pause:boolean) {
 
@@ -67,18 +77,24 @@ export class QuizComponent implements OnInit {
     
     if(correct){
 
-      console.log('note a correct answer for the team');
-
-    } else {
-
-      console.log('do literally nothing');
-
+      this.api.addPoint(this.data.code);
+      
     }
+
+    this.data.updateStop();
 
     setTimeout((() => {
       this.modalCtrl.dismiss()
     }), 500);
 
+  }
+
+  getValue(answer: Object): boolean {
+    return Object.values(answer)[0];
+  }
+
+  getKey(answer: Object): string {
+    return Object.keys(answer)[0];
   }
 
 }
