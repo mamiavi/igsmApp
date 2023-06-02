@@ -101,8 +101,6 @@ export class MapPage implements OnInit {
         
         this.poi.setGeometry(new Point([0,0]));
 
-        //Instead of doing this, just stop the geolocation tracking and start it again once the user leaves the stop and the next stop is set as actual stop
-
         //Open an alert to start the quiz
         this.alertController.create({
           header:'Alert',
@@ -112,9 +110,7 @@ export class MapPage implements OnInit {
             text:'OK',
             role:'confirm',
             handler: () => {
-              // change to next stop
-              
-              // open the modal with the audio
+
               this.showQuizModal();
 
             }
