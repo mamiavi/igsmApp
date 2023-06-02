@@ -20,10 +20,18 @@ export class QuizComponent implements OnInit {
 
   constructor(private modalCtrl: ModalController, private api: ApiService, private data: DataService) { }
 
+  name:string;
+  question:string;
+  answers:[];
+
   ngOnInit() {
 
+    this.name = this.data.geojson[this.data.route[this.data.count]]["name"];
+    this.question = this.data.geojson[this.data.route[this.data.count]]["question"];
+    this.answers = this.data.geojson[this.data.route[this.data.count]]["answers"];
+
     this.player = new Howl({
-      src: './assets/audio/clearday.mp3',
+      src: `./assets/audio/${this.data.geojson[this.data.route[this.data.count]]["audio"]}`,
       onplay: () => {
         this.isPlaying = true;
         this.updateProgress();
@@ -33,7 +41,7 @@ export class QuizComponent implements OnInit {
       }
     });
 
-   }
+  }
 
   togglePlayer(pause:boolean) {
 
@@ -69,19 +77,24 @@ export class QuizComponent implements OnInit {
     
     if(correct){
 
-      console.log('note a correct answer for the team');
       this.api.addPoint(this.data.code);
-
-    } else {
-
-      console.log('do literally nothing');
-
+      
     }
+
+    this.data.updateStop();
 
     setTimeout((() => {
       this.modalCtrl.dismiss()
     }), 500);
 
+  }
+
+  getValue(answer: Object): boolean {
+    return Object.values(answer)[0];
+  }
+
+  getKey(answer: Object): string {
+    return Object.keys(answer)[0];
   }
 
 }

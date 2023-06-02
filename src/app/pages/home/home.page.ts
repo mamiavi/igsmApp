@@ -11,9 +11,8 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class HomePage implements OnInit {
 
-  codes: string[] = [];
   code:string;
-  route:number[];
+  groups: any = {};
 
   constructor(private router:Router, private api:ApiService, private toastController: ToastController, private dataService: DataService) { }
 
@@ -22,10 +21,7 @@ export class HomePage implements OnInit {
     this.api.getGroups().then(response => {
       
       response.data.groups.forEach((group: {id:number, code: string, points:number, devices:number, route:string }) => {
-        
-        this.codes.push(group.code);
-        this.route = group.route.split(';').map(Number);
-      
+        this.groups[group.code] = group.route.split(';').map(Number);
       });
 
     }).catch(err => console.log(err));
@@ -34,10 +30,10 @@ export class HomePage implements OnInit {
 
   public logIn() {
 
-    if(this.codes.includes(this.code)) {
+    if(Object.keys(this.groups).includes(this.code)) {
       
       this.dataService.code = this.code;
-      this.dataService.route = this.route;
+      this.dataService.route = this.groups[this.code];
 
       this.router.navigate(['map']);
     

@@ -9,7 +9,7 @@ import VectorSource from 'ol/source/Vector';
 import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer';
 import OSM from 'ol/source/OSM';
 
-import { transform } from 'ol/proj';
+import { fromLonLat, transform } from 'ol/proj';
 import { getDistance } from 'ol/sphere';
 
 import Geolocation from 'ol/Geolocation';
@@ -20,6 +20,7 @@ import {Icon, Style} from 'ol/style';
 
 import { Attribution } from 'ol/control';
 import { QuizComponent } from 'src/app/components/quiz/quiz.component';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-map',
@@ -32,11 +33,13 @@ export class MapPage implements OnInit {
 
   map: Map;
   positionUser: Feature;
-  nextStop: Feature;
+  poi: Feature;
 
-  constructor(private alertController: AlertController, private modalCtrl: ModalController, private animationCtrl: AnimationController) { }
+  constructor(private alertController: AlertController, private modalCtrl: ModalController, private animationCtrl: AnimationController, private data: DataService) { }
 
   ngOnInit() {
+
+    //Tengo que crear una capa y a esa capa le voy cambaindo las coordenadas según toque sacandolas del geojson que leereé normalmente
 
     // Init the map
     this.map = new Map({
@@ -66,6 +69,13 @@ export class MapPage implements OnInit {
     });
 
     this.positionUser = new Feature();
+    this.poi = new Feature();
+
+    this.poi.setGeometry(new Point(fromLonLat(this.data.geojson[this.data.route[this.data.count]]["geometry"]["coordinates"])));
+
+    this.data.currentStop.subscribe((count) => {
+      this.poi.setGeometry(new Point(fromLonLat(this.data.geojson[this.data.route[count]]["geometry"]["coordinates"])));
+    });
 
     stylePositionUser.setImage(iconUser);
     this.positionUser.setStyle(stylePositionUser);
@@ -81,23 +91,22 @@ export class MapPage implements OnInit {
 
     geolocation.setTracking(true);
 
-    let mierda = true;
 
     geolocation.on('change:position', () => {
       const coordinates = geolocation.getPosition();
       this.positionUser.setGeometry(coordinates ? new Point(coordinates) : undefined);
 
       // check distance
-      if(this.checkDistance(this.positionUser, this.nextStop) || mierda) {
+      if(this.checkDistance(this.positionUser, this.poi)) {
         
-        // Prevent multiple alerts
-        mierda = false;
+        this.poi.setGeometry(new Point([0,0]));
+
         //Instead of doing this, just stop the geolocation tracking and start it again once the user leaves the stop and the next stop is set as actual stop
 
         //Open an alert to start the quiz
         this.alertController.create({
           header:'Alert',
-          subHeader:'Just arrived to {Monumento}',
+          subHeader:`Just arrived to ${this.data.geojson[this.data.route[this.data.count]]["name"]}`,
           message:'Do you want to know more about it?',
           buttons: [{
             text:'OK',
@@ -110,6 +119,7 @@ export class MapPage implements OnInit {
 
             }
           }],
+          backdropDismiss: false
         }).then((alert) => alert.present());
 
       }
@@ -129,7 +139,7 @@ export class MapPage implements OnInit {
     new VectorLayer({
       map: this.map,
       source: new VectorSource({
-        features: [this.positionUser],
+        features: [this.positionUser, this.poi],
       }),
     });
 
@@ -149,16 +159,14 @@ export class MapPage implements OnInit {
 
   }
 
-  public checkDistance(userPosition: Feature, nextStop: Feature) {
+  public checkDistance(userPosition: Feature, poi: Feature) {
 
     const tolerance = 30 //meters
 
     let userGeom = <Point>userPosition.getGeometry()?.clone().transform('EPSG:3857','EPSG:4326');
-    let stopGeom = <Point>nextStop?.getGeometry()?.clone().transform('EPSG:3857','EPSG:4326');
+    let stopGeom = <Point>poi?.getGeometry()?.clone().transform('EPSG:3857','EPSG:4326');
 
-    //let distance = getDistance(userGeom.getCoordinates(), stopGeom.getCoordinates());
-
-    let distance = 1000;
+    let distance = getDistance(userGeom.getCoordinates(), stopGeom.getCoordinates());
 
     if(distance <= tolerance){
 
@@ -182,6 +190,7 @@ export class MapPage implements OnInit {
       component: QuizComponent,
       enterAnimation: this.enterAnimation,
       leaveAnimation: this.leaveAnimation,
+      backdropDismiss: false,
     }).then(modal => modal.present());
     
   }
