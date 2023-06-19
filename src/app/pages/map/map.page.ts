@@ -64,6 +64,15 @@ export class MapPage implements OnInit {
       rotateWithView: true
     });
 
+    const stylePoi = new Style({
+      image: new Icon({
+        anchor: [670, 200],
+        anchorXUnits: 'pixels',
+        anchorYUnits: 'pixels',
+        src: './assets/imgs/poi.png'
+      }),
+    });
+
     const stylePositionUser = new Style({
         image: iconUser
     });
@@ -79,6 +88,8 @@ export class MapPage implements OnInit {
 
     stylePositionUser.setImage(iconUser);
     this.positionUser.setStyle(stylePositionUser);
+
+    this.poi.setStyle(stylePoi)
 
 
     // Start geolocation
