@@ -11,10 +11,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { ApiService } from './services/api.service';
 
+import { IonicStorageModule } from '@ionic/storage-angular';
+import { StorageService } from './services/storage.service';
+import { DataService } from './services/data.service';
+
 @NgModule({
   declarations: [AppComponent, QuizComponent],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, FormsModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, ApiService],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule,
+    FormsModule,
+    IonicStorageModule.forRoot()
+  ],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, ApiService, StorageService, DataService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

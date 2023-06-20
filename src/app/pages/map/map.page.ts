@@ -39,8 +39,6 @@ export class MapPage implements OnInit {
 
   ngOnInit() {
 
-    //Tengo que crear una capa y a esa capa le voy cambaindo las coordenadas según toque sacandolas del geojson que leereé normalmente
-
     // Init the map
     this.map = new Map({
       view: new View({
