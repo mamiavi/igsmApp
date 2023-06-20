@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/services/api.service';
-import { ToastController } from '@ionic/angular';
+import { Platform, ToastController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class HomePage implements OnInit {
   code:string;
   groups: any = {};
 
-  constructor(private router:Router, private api:ApiService, private toastController: ToastController, private dataService: DataService) { }
+  constructor(private router:Router, private platform: Platform, private api:ApiService, private toastController: ToastController, private dataService: DataService) { }
 
   ngOnInit() {
 
@@ -25,6 +25,14 @@ export class HomePage implements OnInit {
       });
 
     }).catch(err => console.log(err));
+
+    this.platform.pause.subscribe(async () => {
+      console.log('Pause event detected');
+    });
+
+    this.platform.resume.subscribe(async () => {
+      console.log('Resume event detected');
+    });
 
   }
 
