@@ -34,7 +34,7 @@ export class ApiService {
       url:this.url + '/' + endPoint + '/' + code,
     }
 
-    return Http.put(options)
+    return Http.put(options);
 
   }
 
@@ -45,6 +45,8 @@ export class ApiService {
     const options: HttpOptions = {
       url:this.url + '/' + endPoint + '/' + code
     }
+
+    return Http.put(options);
 
   }
 
