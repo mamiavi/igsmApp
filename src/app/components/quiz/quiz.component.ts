@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonRange, ModalController } from '@ionic/angular';
+import { IonRange, ModalController, ToastController } from '@ionic/angular';
 import { Howl } from 'howler';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
@@ -18,7 +18,7 @@ export class QuizComponent implements OnInit {
 
   @ViewChild('range', {static: false}) range: IonRange;
 
-  constructor(private modalCtrl: ModalController, private api: ApiService, private data: DataService) { }
+  constructor(private modalCtrl: ModalController, private api: ApiService, private data: DataService, private toastCtrl: ToastController) { }
 
   name:string;
   question:string;
@@ -79,11 +79,27 @@ export class QuizComponent implements OnInit {
 
   checkAnswer(correct:boolean) {
     
+    let toastColor = 'success';
+    let toastMessage = 'Well done!';
+
     if(correct){
 
       this.api.addPoint(this.data.code);
       
+    } else {
+
+      toastColor = 'danger';
+      toastMessage = 'Wrong answer! You should pay more attention next time';
+
     }
+
+    this.toastCtrl.create({
+      color: toastColor,
+      message: toastMessage,
+      position: 'bottom',
+      animated: true,
+      duration: 1000
+    }).then(toast => toast.present());
 
     this.data.updateStop();
 
