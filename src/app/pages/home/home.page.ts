@@ -36,6 +36,8 @@ export class HomePage implements OnInit {
   public logIn() {
 
     if(Object.keys(this.groups).includes(this.code)) {
+
+      this.api.addDevice(this.code);
       
       this.dataService.code = this.code;
       this.dataService.route = this.groups[this.code];
