@@ -47,9 +47,11 @@ export class DataService {
         position: 'middle'
       }).then(toast => toast.present());
 
+      this.storage.remove('group_code');
+
     }
 
-    this.count = this.count + 1;
+    this.count++;
     this.currentStop.next(this.route[this.count]);
     this.storage.set('count', this.count);
   }
