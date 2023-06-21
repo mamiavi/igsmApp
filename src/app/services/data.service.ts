@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { StorageService } from './storage.service';
+import { ToastController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
 
-  constructor(private storage: StorageService) {
+  constructor(private storage: StorageService, private toastCtrl: ToastController) {
 
     this.geojson = [
       { "id": 0, "name": "Torres de Serranos", "audio": "torres_serrano.m4a", "image":"torres_serranos.jpg", "question": "Where was Valencia's moon?", "answers": [ { "The real reason was because the crescent moon shape of the river": true }, { "The reason is because the moon sculpture on the gates of the tower": false }, { "The reason was due to the moon in the arabic invasors flag that could not take the city": false } ] , "geometry": { "type": "Point", "coordinates": [ -0.375963292075909, 39.479322175683201, 0.0 ] } },
@@ -40,7 +41,11 @@ export class DataService {
 
     if(this.count >= 14) {
 
-      console.log('Congrats you have finished!!');
+      this.toastCtrl.create({
+        message: 'Congrats you have finished!!',
+        duration: 2000,
+        position: 'middle'
+      }).then(toast => toast.present());
 
     }
 
