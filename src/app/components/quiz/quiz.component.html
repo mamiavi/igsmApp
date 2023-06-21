@@ -30,7 +30,7 @@
       </ion-list-header>
 
       <ion-item *ngFor="let option of answers" button color="light" (click)="checkAnswer(getValue(option))">
-        <ion-label>{{getKey(option)}}</ion-label>
+        <ion-label class="ion-text-wrap">{{getKey(option)}}</ion-label>
       </ion-item>
       
     </ion-list>
