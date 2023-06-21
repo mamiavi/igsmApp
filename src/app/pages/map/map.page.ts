@@ -80,8 +80,8 @@ export class MapPage implements OnInit {
 
     this.poi.setGeometry(new Point(fromLonLat(this.data.geojson[this.data.route[this.data.count]]["geometry"]["coordinates"])));
 
-    this.data.currentStop.subscribe((count) => {
-      this.poi.setGeometry(new Point(fromLonLat(this.data.geojson[this.data.route[count]]["geometry"]["coordinates"])));
+    this.data.currentStop.subscribe((stop) => {
+      this.poi.setGeometry(new Point(fromLonLat(this.data.geojson[stop]["geometry"]["coordinates"])));
     });
 
     stylePositionUser.setImage(iconUser);
