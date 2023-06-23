@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StorageService } from './services/storage.service';
 import { DataService } from './services/data.service';
+import { App } from '@capacitor/app';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,10 @@ export class AppComponent implements OnInit {
   constructor(private storage: StorageService, private router: Router, private data: DataService) {}
 
   ngOnInit() {
+
+    App.addListener('backButton', () => {
+      App.exitApp();
+    });
 
     this.storage.init().then(() => {
 
