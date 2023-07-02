@@ -166,7 +166,7 @@ export class MapPage implements OnInit {
 
   public checkDistance(userPosition: Feature, poi: Feature) {
 
-    const tolerance = 3000 //meters
+    const tolerance = 30 //meters
 
     let userGeom = <Point>userPosition.getGeometry()?.clone().transform('EPSG:3857','EPSG:4326');
     let stopGeom = <Point>poi?.getGeometry()?.clone().transform('EPSG:3857','EPSG:4326');
