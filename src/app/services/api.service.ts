@@ -7,9 +7,6 @@ import { HttpOptions } from '@capacitor/core';
 })
 export class ApiService {
 
-  //url:string = 'https://mmv-gis.ml/'
-  //url:string = 'http://192.168.0.14:8000/igsm_api/groups/'
-  // url:string = 'http://127.0.0.1:8000/igsm_api/groups/'
   url:string = 'http://81.202.12.40/igsm_api'
 
   constructor() { }
